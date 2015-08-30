@@ -4,6 +4,7 @@
     <list default="true" id="403e5e02-c3cb-4cf5-b914-30f3ac6cedca" name="Default" comment="" />
     <ignored path="codeproject.iws" />
     <ignored path=".idea/workspace.xml" />
+    <ignored path=".idea/dataSources.local.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
