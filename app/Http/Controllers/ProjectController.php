@@ -2,39 +2,24 @@
 
 namespace CodeProject\Http\Controllers;
 
-use CodeProject\Repositories\ClientRepository;
-use CodeProject\Services\ClientService;
+use CodeProject\Repositories\ProjectRepository;
+use CodeProject\Services\ProjectService;
 use Illuminate\Http\Request;
 
-//use CodeProject\Http\Requests;
-//use CodeProject\Http\Controllers\Controller;
+use CodeProject\Http\Requests;
+use CodeProject\Http\Controllers\Controller;
 
-
-
-class ClientController extends Controller
+class ProjectController extends Controller
 {
-
-    /**
-     * @var ClientRepository
-     */
-    private $repository;
-
-    /**
-     * @var ClientService
+    /*
+     *
      */
     private $service;
 
-    /**
-     * @param ClientRepository $repository
-     * @param ClientService $service
-     */
-    public function __construct(ClientRepository $repository, ClientService $service)
+    public function __construct(ProjectService $service)
     {
-        $this->repository = $repository;
         $this->service = $service;
     }
-
-
 
     /**
      * Display a listing of the resource.
@@ -43,8 +28,9 @@ class ClientController extends Controller
      */
     public function index()
     {
-        return $this->repository->all();
+        return $this->service->all();
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -54,7 +40,7 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->service->create($request->all());
+        return $this->service->store($request->all());
     }
 
     /**
@@ -69,7 +55,6 @@ class ClientController extends Controller
     }
 
 
-
     /**
      * Update the specified resource in storage.
      *
@@ -79,7 +64,7 @@ class ClientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->service->update($request->all(), $id);
+        return $this->service->update($request->all(), $id);
     }
 
     /**
@@ -90,6 +75,6 @@ class ClientController extends Controller
      */
     public function destroy($id)
     {
-        $this->service->delete($id);
+        $this->service->destroy($id);
     }
 }

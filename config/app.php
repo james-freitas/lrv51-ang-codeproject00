@@ -144,6 +144,13 @@ return [
         CodeProject\Providers\EventServiceProvider::class,
         CodeProject\Providers\RouteServiceProvider::class,
 
+        /**
+         * Repository
+         */
+        Prettus\Repository\Providers\RepositoryServiceProvider::class,
+        CodeProject\Providers\CodeProjectRepositoryProvider::class,
+
+
     ],
 
     /*
