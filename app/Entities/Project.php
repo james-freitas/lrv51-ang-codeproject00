@@ -18,7 +18,7 @@ class Project extends Model
 
    public function owner()
    {
-       return $this->belongsTo('CodeProject\Entities\User');
+       return $this->belongsTo('CodeProject\Entities\User', 'owner_id');
    }
 
    public function client()

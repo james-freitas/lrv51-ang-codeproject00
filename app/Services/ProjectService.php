@@ -34,7 +34,7 @@ class ProjectService {
 
     public function all()
     {
-        return $this->repository->with(['owner','client'])->all();
+        return $this->repository->with(['client','owner'])->all();
     }
 
     public function create(array $data)
