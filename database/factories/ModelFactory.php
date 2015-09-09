@@ -13,15 +13,15 @@
 
 $factory->define(CodeProject\Entities\User::class, function (Faker\Generator $faker) {
     return [
-        'name' => 'james',
+/*        'name' => 'james',
         'email' => 'jamesfrj@yahoo.com.br',
         'password' => 123456,
-        'remember_token' => '123456',
+        'remember_token' => '123456',*/
 
-//        'name' => $faker->name,
-//        'email' => $faker->email,
-//        'password' => bcrypt(str_random(10)),
-//        'remember_token' => str_random(10),
+        'name' => $faker->name,
+        'email' => $faker->email,
+        'password' => bcrypt(str_random(10)),
+        'remember_token' => str_random(10),
     ];
 });
 
@@ -38,13 +38,13 @@ $factory->define(CodeProject\Entities\Client::class, function (Faker\Generator $
 
 $factory->define(CodeProject\Entities\Project::class, function (Faker\Generator $faker) {
     return [
-        'owner_id' => 1,
-        'client_id' => $faker->numberBetween(1,4),
-        'name' => $faker->name,
+        'owner_id' => rand(1,10),
+        'client_id' => rand(1,10),
+        'name' => $faker->word,
         'description' => $faker->sentence,
-        'progress' => $faker->numberBetween(0,100),
-        'status' => $faker->randomElement($array = array('Opened', 'Assigned', 'In Progress', 'Canceled', 'Finished')),
-        'due_date' => $faker->date('Y-m-d'),
+        'progress' => rand(1,100),
+        'status' => rand(1,3),
+        'due_date' => $faker->dateTime('now'),
     ];
 });
 

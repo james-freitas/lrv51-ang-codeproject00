@@ -90,6 +90,6 @@ class ClientController extends Controller
      */
     public function destroy($id)
     {
-        $this->service->delete($id);
+        $this->service->destroy($id);
     }
 }

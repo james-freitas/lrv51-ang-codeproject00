@@ -16,13 +16,13 @@ class Project extends Model
         'due_date'
     ];
 
-   public function user()
+   public function owner()
    {
        return $this->belongsTo('CodeProject\Entities\User');
    }
 
    public function client()
    {
-       return $this->belongsTo('CodeProject\Entites\Client');
+       return $this->belongsTo('CodeProject\Entities\Client');
    }
 }

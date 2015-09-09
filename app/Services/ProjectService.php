@@ -34,10 +34,10 @@ class ProjectService {
 
     public function all()
     {
-        return $this->repository->all();
+        return $this->repository->with(['owner','client'])->all();
     }
 
-    public function store(array $data)
+    public function create(array $data)
     {
         try {
             $this->validator->with($data)->passesOrFail();
@@ -71,7 +71,7 @@ class ProjectService {
 
     public function show($id)
     {
-        return $this->repository->find($id);
+        return $this->repository->with(['owner','client'])->find($id);
     }
 
     public function destroy($id)

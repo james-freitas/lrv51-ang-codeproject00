@@ -40,7 +40,7 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->service->store($request->all());
+        return $this->service->create($request->all());
     }
 
     /**
