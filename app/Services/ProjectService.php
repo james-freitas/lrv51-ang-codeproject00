@@ -11,6 +11,7 @@ namespace CodeProject\Services;
 
 use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Validators\ProjectValidator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 class ProjectService {
@@ -63,6 +64,11 @@ class ProjectService {
                 'error' => true,
                 'message' => $e->getMessageBag()
             ];
+        } catch (ModelNotFoundException $e) {
+            return [
+                'error' => true,
+                'message' => 'Projeto não encontrado.'
+            ];
         }
 
 
@@ -71,11 +77,27 @@ class ProjectService {
 
     public function show($id)
     {
-        return $this->repository->with(['owner','client'])->find($id);
+        try {
+            return $this->repository->with(['owner','client'])->find($id);
+        } catch (ModelNotFoundException $e) {
+            return [
+                'error' => true,
+                'message' => 'Projeto não encontrado.'
+            ];
+        }
+
     }
 
     public function destroy($id)
     {
+        try {
+            $this->repository->find($id);
+        } catch (ModelNotFoundException $e) {
+            return [
+                'error' => true,
+                'message' => 'Projeto não encontrado.'
+            ];
+        }
         return $this->repository->delete($id);
     }
 
