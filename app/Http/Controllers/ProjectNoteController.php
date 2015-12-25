@@ -2,49 +2,36 @@
 
 namespace CodeProject\Http\Controllers;
 
-use CodeProject\Repositories\ClientRepository;
-use CodeProject\Services\ClientService;
+use CodeProject\Repositories\ProjectNoteRepository;
+use CodeProject\Services\ProjectNoteService;
 use Illuminate\Http\Request;
 
-//use CodeProject\Http\Requests;
-//use CodeProject\Http\Controllers\Controller;
+use CodeProject\Http\Requests;
+use CodeProject\Http\Controllers\Controller;
 
-
-
-class ClientController extends Controller
+class ProjectNoteController extends Controller
 {
-
-    /**
-     * @var ClientRepository
-     */
-    private $repository;
-
-    /**
-     * @var ClientService
+    /*
+     *
      */
     private $service;
 
-    /**
-     * @param ClientRepository $repository
-     * @param ClientService $service
-     */
-    public function __construct(ClientRepository $repository, ClientService $service)
+    public function __construct(ProjectNoteRepository $repository, ProjectNoteService $service)
     {
         $this->repository = $repository;
         $this->service = $service;
     }
-
-
 
     /**
      * Display a listing of the resource.
      *
      * @return Response
      */
-    public function index()
+    public function index($id)
     {
-        return $this->repository->all();
+        return $this->repository->findWhere(['project_id' => $id]);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -63,11 +50,10 @@ class ClientController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function show($id)
+    public function show($id, $noteId)
     {
-        return $this->service->show($id);
+        return $this->repository->findWhere(['project_id'=>$id, 'id'=>$noteId]);
     }
-
 
 
     /**
@@ -77,9 +63,9 @@ class ClientController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, $noteId)
     {
-        return $this->service->update($request->all(), $id);
+        return $this->service->update($request->all(), $noteId);
     }
 
     /**
@@ -88,8 +74,8 @@ class ClientController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy($id, $noteId)
     {
-        return $this->service->destroy($id);
+        return $this->service->destroy($id, $noteId);
     }
 }

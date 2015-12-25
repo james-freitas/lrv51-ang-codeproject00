@@ -11,19 +11,43 @@
 |
 */
 
+use LucaDegasperi\OAuth2Server\Facades\Authorizer;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('project', 'ProjectController@index');
-Route::post('project', 'ProjectController@store');
-Route::put('project/{id}', 'ProjectController@update');
-Route::get('project/{id}', 'ProjectController@show');
-Route::delete('project/{id}', 'ProjectController@destroy');
+Route::post('oauth/access_token', function() {
+   return Response::json(Authorizer::issueAccessToken());
+});
+
+Route::group(['middleware' => 'oauth'], function() {
+
+    // pega os métodos principais
+    Route::resource('client', 'ClientController',['except' => ['create', 'edit']]);
+    Route::resource('project', 'ProjectController', ['except' => ['create', 'edit']]);
+
+    Route::group(['prefix' => 'project'], function() {
+
+        Route::get('{id}/note', 'ProjectNoteController@index');
+        Route::post('{id}/note', 'ProjectNoteController@store');
+        Route::get('{id}/note/{noteId}', 'ProjectNoteController@show');
+        Route::put('{id}/note/{noteId}', 'ProjectNoteController@update');
+        Route::delete('{id}/note/{noteId}', 'ProjectNoteController@delete');
+
+        Route::get('{id}/task', 'ProjectTaskController@index');
+        Route::post('{id}/task', 'ProjectTaskController@store');
+        Route::get('{id}/task/{taskId}', 'ProjectTaskController@show');
+        Route::put('{id}/task/{taskId}', 'ProjectTaskController@update');
+        Route::delete('{id}/task/{taskId}', 'ProjectTaskController@delete');
+
+        Route::get('{id}/members', 'ProjectController@members');
+
+        Route::post('{id}/file', 'ProjectFileController@store');
+    });
+
+});
 
 
-Route::get('client', 'ClientController@index');
-Route::post('client', 'ClientController@store');
-Route::get('client/{id}', 'ClientController@show');
-Route::delete('client/{id}', 'ClientController@destroy');
-Route::put('client/{id}', 'ClientController@update');
+
+
