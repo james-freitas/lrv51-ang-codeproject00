@@ -16,11 +16,11 @@ class DatabaseSeeder extends Seeder
 
         DB::statement('SET foreign_key_checks = 0;');
 
-        $this->call(UserTableSeeder::class);
+        //$this->call(UserTableSeeder::class);
         $this->call(ClientTableSeeder::class);
-        $this->call(ProjectTableSeeder::class);
-        $this->call(ProjectNoteTableSeeder::class);
-        $this->call(ProjectTaskTableSeeder::class);
+        //$this->call(ProjectTableSeeder::class);
+        //$this->call(ProjectNoteTableSeeder::class);
+        //$this->call(ProjectTaskTableSeeder::class);
 
         DB::statement('SET foreign_key_checks = 1;');
         Model::reguard();

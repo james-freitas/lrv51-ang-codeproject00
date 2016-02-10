@@ -67,7 +67,7 @@ class ProjectNoteService {
         } catch (ModelNotFoundException $e) {
             return [
                 'error' => true,
-                'message' => 'Projeto não encontrado.'
+                'message' => 'Nota de projeto não encontrada.'
             ];
         }
 
