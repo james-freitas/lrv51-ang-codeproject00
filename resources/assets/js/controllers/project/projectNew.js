@@ -13,5 +13,18 @@ angular.module('app.controllers')
                     $location.path('/projects');
                 });
             }
+        };
+
+        $scope.formatName = function (id) {
+            if(id) {
+                for(var i in $scope.clients){
+                    if($scope.clients[i].id == id) {
+                        return $scope.clients[i].name;
+                    }
+                }
+            }
+            return '';
         }
+
+
     }]);

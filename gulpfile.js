@@ -1,6 +1,7 @@
 var elixir = require('laravel-elixir'),
     liveReload = require('gulp-livereload'),
-    clean = require('rimraf'),
+    //clean = require('rimraf'),
+    clean = require('gulp-clean'),
     gulp = require('gulp');
 
 var config = {
@@ -20,7 +21,7 @@ config.vendor_path_js = [
     config.bower_path + '/angular-resource/angular-resource.min.js',
     config.bower_path + '/angular-animate/angular-animate.min.js',
     config.bower_path + '/angular-messages/angular-messages.min.js',
-    config.bower_path + '/angular-bootstrap/ui-bootstrap.min.js',
+    config.bower_path + '/angular-bootstrap/ui-bootstrap-tpls.min.js',
     config.bower_path + '/angular-strap/dist/modules/navbar.min.js',
     config.bower_path + '/angular-cookies/angular-cookies.min.js',
     config.bower_path + '/query-string/query-string.js',
@@ -87,7 +88,7 @@ gulp.task('copy-scripts', function(){
 });
 
 gulp.task('clear-build-folder', function(){
-    clean.sync(config.build_path);
+    //clean.sync(config.build_path);
 });
 
 gulp.task('default', ['clear-build-folder'], function(){
