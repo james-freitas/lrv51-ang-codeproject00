@@ -6,7 +6,7 @@ angular.module('app.services')
         },
         query: {
             method: 'GET',
-            isArray: true,
+            //isArray: true,
             transformResponse: function(data, headers){
                 var dataJson = JSON.parse(data);
                 data.Json = dataJson.data;
@@ -15,3 +15,4 @@ angular.module('app.services')
         }
     });
 }]);
+

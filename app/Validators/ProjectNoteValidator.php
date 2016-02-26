@@ -20,3 +20,4 @@ class ProjectNoteValidator extends LaravelValidator{
     ];
 
 }
+

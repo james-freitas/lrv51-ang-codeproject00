@@ -3,7 +3,7 @@ angular.module('app.services')
     function($resource, $filter, $httpParamSerializer, appConfig) {
     return $resource(appConfig.baseUrl + '/project/:id', {id: '@id'},  {
         query: {
-            isArray: false
+            //isArray: false
         },
         save: {
           method: 'POST',
