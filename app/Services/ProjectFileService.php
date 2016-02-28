@@ -12,10 +12,13 @@ namespace CodeProject\Services;
 use CodeProject\Repositories\ProjectFileRepository;
 use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Validators\ProjectFileValidator;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use PhpSpec\Util\Filesystem;
 use Prettus\Validator\Exceptions\ValidatorException;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Filesystem\Factory as Storage;
+use Illuminate\Filesystem\Filesystem;
+
+
+
+
 
 class ProjectFileService {
 
@@ -57,7 +60,6 @@ class ProjectFileService {
             $projectFile = $project->files()->create($data);
 
             $this->storage->put($projectFile->id . "." . $data['extension'], $this->fileSystem->get($data['file']));
-
             return $projectFile;
 
         } catch (ValidatorException $e) {

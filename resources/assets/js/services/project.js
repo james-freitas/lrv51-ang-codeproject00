@@ -2,9 +2,6 @@ angular.module('app.services')
 .service('Project', ['$resource', '$filter', '$httpParamSerializer', 'appConfig',
     function($resource, $filter, $httpParamSerializer, appConfig) {
     return $resource(appConfig.baseUrl + '/project/:id', {id: '@id'},  {
-        query: {
-            //isArray: false
-        },
         save: {
           method: 'POST',
           transformRequest: function (data) {
