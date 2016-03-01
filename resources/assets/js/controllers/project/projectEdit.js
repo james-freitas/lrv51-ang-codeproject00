@@ -5,13 +5,14 @@ angular.module('app.controllers')
             Project.get({id: $routeParams.id}, function(data){
                 $scope.project = data;
                 $scope.clientSelected = data.client.data;
-                //Client.get({id: data.client_id}, function(data){
-                //    $scope.clientSelected = data;
-                //});
+                Client.get({id: data.client_id}, function(data){
+                    $scope.clientSelected = data;
+                });
             });
 
 
             $scope.status = appConfig.project.status;
+
             $scope.save = function() {
                 if($scope.form.$valid) {
                     $scope.project.owner_id = $cookies.getObject('user').id;

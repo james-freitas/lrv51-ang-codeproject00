@@ -12,12 +12,10 @@ namespace CodeProject\Services;
 use CodeProject\Repositories\ProjectFileRepository;
 use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Validators\ProjectFileValidator;
+use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Illuminate\Contracts\Filesystem\Factory as Storage;
 use Illuminate\Filesystem\Filesystem;
-
-
-
 
 
 class ProjectFileService {
@@ -54,12 +52,12 @@ class ProjectFileService {
     public function create(array $data)
     {
         try {
-            $this->validator->with($data)->passesOrFail();
+            $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
 
             $project = $this->projectRepository->skipPresenter()->find($data['project_id']);
             $projectFile = $project->files()->create($data);
 
-            $this->storage->put($projectFile->id . "." . $data['extension'], $this->fileSystem->get($data['file']));
+            $this->storage->put($projectFile->getFileName(), $this->fileSystem->get($data['file']));
             return $projectFile;
 
         } catch (ValidatorException $e) {
@@ -74,7 +72,7 @@ class ProjectFileService {
     {
 
         try {
-            $this->validator->with($data)->passesOrFail();
+            $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
             return $this->repository->update($data, $id);
 
@@ -92,7 +90,7 @@ class ProjectFileService {
     {
         $projectFile = $this->repository->skipPresenter()->find($id);
         if($this->storage->exists($projectFile->id.'.'.$projectFile->extension)){
-            $this->storage->delete($projectFile->id.'.'.$projectFile->extension);
+            $this->storage->delete($projectFile->getFileName());
             return $projectFile->delete();
         }
     }
@@ -108,8 +106,13 @@ class ProjectFileService {
         switch($this->storage->getDefaultDriver()){
             case 'local':
                 return $this->storage->getDriver()->getAdapter()->getPathPrefix()
-                    .'/'. $projectFile->id . '.' . $projectFile->extension;
+                    .'/'. $projectFile->getFileName();
         }
+    }
+
+    public function getFileName($id){
+        $projectFile = $this->repository->skipPresenter()->find($id);
+        return $projectFile->getFileName();
     }
 
     public function checkProjectOwner($projectFileId)
