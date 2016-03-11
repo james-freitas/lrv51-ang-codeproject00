@@ -3,16 +3,16 @@
 namespace CodeProject\Http\Middleware;
 
 use Closure;
-use CodeProject\Repositories\ProjectRepository;
+use CodeProject\Services\ProjectService;
 
 class CheckProjectOwner
 {
 
-    private $repository;
+    private $service;
 
-    public function __construct(ProjectRepository $repository)
+    public function __construct(ProjectService $service)
     {
-        $this->repository = $repository;
+        $this->service = $service;
     }
 
     /**
@@ -24,19 +24,14 @@ class CheckProjectOwner
      */
     public function handle($request, Closure $next)
     {
-        $userId = \Authorizer::getResourceOwnerId();
-        $projectId = $request->project;
 
-        if($this->repository->isOwner($projectId, $userId) == false) {
+        $projectId = $request->route('id') ? $request->route('id') : $request->route('project');
+
+        if($this->service->checkProjectOwner($projectId) == false) {
             return ['error' => 'Access forbidden'];
         }
 
         return $next($request);
-    }
-
-    private function checkProjectOwner($projectId)
-    {
-
     }
 
 }

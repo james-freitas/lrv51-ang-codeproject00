@@ -34,7 +34,7 @@ angular.module('app.controllers')
             $scope.getClients = function (name) {
                 return Client.query({
                     search: name,
-                    searchFileds: 'name:like'
+                    searchFields: 'name:like'
                 }).$promise;  //grante que retorna os dados
             };
 

@@ -13,7 +13,6 @@ class ProjectTask extends Model implements Transformable
     protected $fillable = [
         'name',
         'project_id',
-        'description',
         'start_date',
         'due_date',
         'status'

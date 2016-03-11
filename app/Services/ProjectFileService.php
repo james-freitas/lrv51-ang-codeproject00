@@ -89,7 +89,7 @@ class ProjectFileService {
     public function delete($id)
     {
         $projectFile = $this->repository->skipPresenter()->find($id);
-        if($this->storage->exists($projectFile->id.'.'.$projectFile->extension)){
+        if($this->storage->exists($projectFile->getFileName())){
             $this->storage->delete($projectFile->getFileName());
             return $projectFile->delete();
         }
@@ -113,30 +113,6 @@ class ProjectFileService {
     public function getFileName($id){
         $projectFile = $this->repository->skipPresenter()->find($id);
         return $projectFile->getFileName();
-    }
-
-    public function checkProjectOwner($projectFileId)
-    {
-        $userId = \Authorizer::getResourceOwnerId();
-        $projectId = $this->repository->skipPresenter()->find($projectFileId)->project_id;
-
-        return $this->projectRepository->isOwner($projectId, $userId);
-    }
-
-    public function checkProjectMember($projectFileId)
-    {
-        $userId = \Authorizer::getResourceOwnerId();
-        $projectId = $this->repository->skipPresenter()->find($projectFileId)->project_id;
-
-        return $this->projectRepository->hasMember($projectId, $userId);
-    }
-
-    public function checkProjectPermissions($projectFileId)
-    {
-        if($this->checkProjectOwner($projectFileId) or $this->checkProjectMember($projectFileId)) {
-            return true;
-        }
-        return false;
     }
 
 }

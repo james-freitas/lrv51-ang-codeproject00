@@ -115,6 +115,6 @@ class ProjectFileController extends Controller
         if($this->service->checkProjectOwner($id)==false){
             return ['error' => 'Access Forbidden'];
         }
-        return $this->repository->delete($id);
+        $this->service->delete($id);
     }
 }
