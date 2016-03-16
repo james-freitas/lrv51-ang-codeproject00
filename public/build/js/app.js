@@ -75,6 +75,14 @@ app.config(['$routeProvider', '$httpProvider', 'OAuthProvider',
           templateUrl: 'build/views/login.html',
           controller: 'LoginController'
         })
+        .when('/logout', {
+            resolve: {
+                logout: ['$location', 'OAuthToken', function($location, OAuthToken){
+                    OAuthToken.removeToken();
+                    return $location.path('/login');
+                }]
+            }
+        })
         .when('/home', {
             templateUrl: 'build/views/home.html',
             controller: 'HomeController'
@@ -197,7 +205,7 @@ app.run(['$rootScope', '$location', '$window', 'OAuth', function($rootScope, $lo
 
     $rootScope.$on('$routeChangeStart', function(event, next, current){
          if(next.$$route.originalPath != '/login'){
-            if(!OAuth.isAuthenticated()){
+            if(!OAuth.isAuthenticated()) {
                 $location.path('login');
             }
          }
