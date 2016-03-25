@@ -7,10 +7,10 @@
 	<title>Laravel</title>
 
     @if(Config::get('app.debug'))
-        <link rel="stylesheet" href="{{ asset('build/css/app.css') }}"/>
-        <link rel="stylesheet" href="{{ asset('build/css/components.css') }}"/>
-        <link rel="stylesheet" href="{{ asset('build/css/flaticon.css') }}"/>
         <link rel="stylesheet" href="{{ asset('build/css/font-awesome.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('build/css/flaticon.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('build/css/components.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('build/css/app.css') }}"/>
     @else
         <link rel="stylesheet" href="{{ elixir('css/all.css') }}"/>
     @endif
@@ -26,43 +26,8 @@
 	<![endif]-->
 </head>
 <body>
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
-                <span class="sr-only">Toggle Navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Laravel</a>
-        </div>
 
-        <div class="collapse navbar-collapse" id="navbar">
-            <ul class="nav navbar-nav">
-                <li><a href="{{ url('/') }}">Welcome</a></li>
-            </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-                @if(auth()->guest())
-                    @if(!Request::is('auth/login'))
-                        <li><a href="{{ url('/auth/login') }}">Login</a></li>
-                    @endif
-                    @if(!Request::is('auth/register'))
-                        <li><a href="{{ url('/auth/register') }}">Register</a></li>
-                    @endif
-                @else
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ auth()->user()->name }} <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ url('/auth/logout') }}">Logout</a></li>
-                        </ul>
-                    </li>
-                @endif
-            </ul>
-        </div>
-    </div>
-</nav>
+<load-template url="/build/views/templates/menu.html"></load-template>
 
 <div ng-view>
 
@@ -81,17 +46,27 @@
     <script src="{{asset('build/js/vendor/query-string.js')}}"></script>
     <script src="{{asset('build/js/vendor/angular-oauth2.min.js')}}"></script>
     <script src="{{asset('build/js/vendor/ng-file-upload.min.js')}}"></script>
+    <script src="{{asset('build/js/vendor/http-auth-interceptor.js')}}"></script>
+    <script src="{{asset('build/js/vendor/dirPagination.js')}}"></script>
+    <script src="{{asset('build/js/vendor/pusher.min.js')}}"></script>
+    <script src="{{asset('build/js/vendor/pusher-angular.min.js')}}"></script>
+
 
     <script src="{{asset('build/js/app.js')}}"></script>
 
     <!-- CONTROLLERS -->
+    <script src="{{asset('build/js/controllers/menu.js')}}"></script>
     <script src="{{asset('build/js/controllers/login.js')}}"></script>
+    <script src="{{asset('build/js/controllers/loginModal.js')}}"></script>
     <script src="{{asset('build/js/controllers/home.js')}}"></script>
+
+    <script src="{{asset('build/js/controllers/client/clientDashboard.js')}}"></script>
     <script src="{{asset('build/js/controllers/client/clientList.js')}}"></script>
     <script src="{{asset('build/js/controllers/client/clientNew.js')}}"></script>
     <script src="{{asset('build/js/controllers/client/clientEdit.js')}}"></script>
     <script src="{{asset('build/js/controllers/client/clientRemove.js')}}"></script>
 
+    <script src="{{asset('build/js/controllers/project/projectDashboard.js')}}"></script>
     <script src="{{asset('build/js/controllers/project/projectShow.js')}}"></script>
     <script src="{{asset('build/js/controllers/project/projectList.js')}}"></script>
     <script src="{{asset('build/js/controllers/project/projectNew.js')}}"></script>
@@ -117,14 +92,19 @@
     <script src="{{asset('build/js/controllers/project-member/projectMemberList.js')}}"></script>
     <script src="{{asset('build/js/controllers/project-member/projectMemberRemove.js')}}"></script>
 
+
     <!-- DIRECTIVES -->
     <script src="{{asset('build/js/directives/projectFileDownload.js')}}"></script>
+    <script src="{{asset('build/js/directives/loginForm.js')}}"></script>
+    <script src="{{asset('build/js/directives/loadTemplate.js')}}"></script>
+    <script src="{{asset('build/js/directives/tabProject.js')}}"></script>
 
     <!-- FILTERS -->
     <script src="{{asset('build/js/filters/date-br.js')}}"></script>
 
     <!-- SERVICES -->
     <script src="{{asset('build/js/services/url.js')}}"></script>
+    <script src="{{asset('build/js/services/oauthFixInterceptor.js')}}"></script>
     <script src="{{asset('build/js/services/client.js')}}"></script>
     <script src="{{asset('build/js/services/project.js')}}"></script>
     <script src="{{asset('build/js/services/projectNote.js')}}"></script>
@@ -135,5 +115,17 @@
 @else
     <script src="{{ elixir('js/all.js') }}"></script>
 @endif
+
+<script type="text/javascript">
+    var socket = new Pusher('6ec211fb0fba4c76db41'); // api key do pusher
+    var channel = socket.subscribe('user.1');
+    channel.bind('CodeProject\\Events\\TaskWasIncluded',
+            function(data) {
+                console.log(data);
+            }
+    );
+
+</script>
+
 </body>
 </html>

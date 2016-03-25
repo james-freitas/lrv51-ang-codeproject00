@@ -10,7 +10,6 @@ angular.module('app.controllers')
                 });
             });
 
-
             $scope.status = appConfig.project.status;
 
             $scope.save = function() {

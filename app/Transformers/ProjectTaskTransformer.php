@@ -11,7 +11,7 @@ namespace CodeProject\Transformers;
 use CodeProject\Entities\ProjectTask;
 use League\Fractal\TransformerAbstract;
 
-class ProjectNoteTransformer extends TransformerAbstract
+class ProjectTaskTransformer extends TransformerAbstract
 {
 
     public function transform(ProjectTask $o)
