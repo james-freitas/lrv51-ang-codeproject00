@@ -46,6 +46,9 @@ angular.module('app.services')
         update: {
             method: 'PUT',
             transformRequest: transformData
+        },
+        query: {
+            isArray: false
         }
 
     });
