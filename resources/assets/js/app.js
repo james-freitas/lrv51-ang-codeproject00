@@ -2,18 +2,18 @@ var app = angular.module('app', [
     'ngRoute', 'angular-oauth2', 'app.controllers', 'app.services', 'app.filters', 'app.directives',
     'ui.bootstrap.typeahead', 'ui.bootstrap.datepicker' ,'ui.bootstrap.tpls', 'ui.bootstrap.modal',
     'ngFileUpload','http-auth-interceptor', 'angularUtils.directives.dirPagination',
-     'mgcrea.ngStrap.navbar', 'ui.bootstrap.dropdown','pusher-angular'
+     'mgcrea.ngStrap.navbar', 'ui.bootstrap.dropdown','pusher-angular','ui-notification'
 ]);
 
-angular.module('app.controllers', ['ngMessages','angular-oauth2']);
+angular.module('app.controllers', ['ngMessages']);
 angular.module('app.filters', []);
 angular.module('app.directives', []);
 angular.module('app.services', ['ngResource']);
 
-
 app.provider('appConfig', ['$httpParamSerializerProvider', function($httpParamSerializerProvider) {
    var config = {
        baseUrl: 'http://localhost:8000',
+       pusherKey: '6ec211fb0fba4c76db41',
        project:{
            status: [
                {value: 1, label: 'Não iniciado'},
@@ -224,14 +224,43 @@ app.config(['$routeProvider', '$httpProvider', 'OAuthProvider',
     OAuthTokenProvider.configure({
         name: 'token',
         options: {
-            secure: false
+            secure: false // colocar como true para seguro
         }
     })
 }]),
 
-app.run(['$rootScope', '$location', '$http', '$modal', 'httpBuffer', 'OAuth',
-    function($rootScope, $location, $http, $modal, httpBuffer, OAuth) {
+app.run(['$rootScope', '$location', '$http', '$modal',
+    '$cookies', '$pusher', 'httpBuffer', 'OAuth', 'appConfig',
+    'Notification',
+    function($rootScope, $location, $http, $modal, $cookies, $pusher, httpBuffer, OAuth, appConfig, Notification) {
     // Escopo global da aplicação
+
+    $rootScope.$on('pusher-build', function(event, data){
+        if(data.next.$$route.originalPath != '/login'){
+            if(OAuth.isAuthenticated()){
+                if(!window.client) {
+                    window.client = new Pusher(appConfig.pusherKey);
+                    var pusher = $pusher(window.client);
+                    var channel = pusher.subscribe('user.'+$cookies.getObject('user').id);
+                    channel.bind('CodeProject\\Events\\TaskWasIncluded',
+                        function(data) {
+                            var name = data.task.name;
+                            Notification.success('Tarefa '+name+' foi incluída!');
+                        }
+                    );
+                }
+            }
+        }
+    });
+
+    $rootScope.$on('pusher-destroy', function(event, data){
+        if(data.next.$$route.originalPath == '/login'){
+            if(window.client){
+                window.client.disconnect();
+                window.client = null;
+            }
+        }
+    });
 
     $rootScope.$on('$routeChangeStart', function(event, next, current){
          if(next.$$route.originalPath != '/login'){
@@ -239,6 +268,8 @@ app.run(['$rootScope', '$location', '$http', '$modal', 'httpBuffer', 'OAuth',
                 $location.path('login');
             }
          }
+        $rootScope.$emit('pusher-build', {next: next});
+        $rootScope.$emit('pusher-destroy', {next: next});
     });
 
     $rootScope.$on('$routeChangeSuccess', function(event, current, previous){
@@ -256,8 +287,8 @@ app.run(['$rootScope', '$location', '$http', '$modal', 'httpBuffer', 'OAuth',
             httpBuffer.append(data.rejection.config, data.deferred);
             if(!$rootScope.loginModalOpened){
                 var modalInstance = $modal.open({
-                    templateUrl: 'build/views/templates/loginModal.html',
-                    controller: 'LoginModalController'
+                    templateUrl: 'build/views/templates/refreshModal.html',
+                    controller: 'RefreshModalController'
                 });
                 $rootScope.loginModalOpened = true;
             }

@@ -1,13 +1,16 @@
 angular.module('app.controllers')
     .controller('ProjectEditController',
-    ['$scope', '$routeParams', '$location', '$cookies', 'Project', 'Client', 'appConfig',
-        function($scope, $routeParams, $location, $cookies, Project, Client, appConfig){
+    ['$scope', '$routeParams', '$location', '$cookies', '$q', '$filter', 'Project', 'Client', 'appConfig',
+        function($scope, $routeParams, $location, $cookies, $q, $filter, Project, Client, appConfig){
             Project.get({id: $routeParams.id}, function(data){
                 $scope.project = data;
                 $scope.clientSelected = data.client.data;
+
+/*
                 Client.get({id: data.client_id}, function(data){
                     $scope.clientSelected = data;
                 });
+*/
             });
 
             $scope.status = appConfig.project.status;
@@ -29,10 +32,17 @@ angular.module('app.controllers')
             };
 
             $scope.getClients = function (name) {
-                return Client.query({
+                var deferred = $q.defer();
+                Client.query({
                     search: name,
-                    searchFileds: 'name:like'
-                }).$promise;  //grante que retorna os dados
+                    searchFields: 'name:like'
+                }, function(data){
+                    var result = $filter('limitTo')(data.data,10);
+                    deferred.resolve(result);
+                }, function(error){
+                    deferred.reject(error);
+                });
+                return deferred.promise;
             };
 
             $scope.selectClient = function(item){

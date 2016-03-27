@@ -4,6 +4,7 @@ namespace CodeProject\Http\Controllers;
 
 use CodeProject\Repositories\ProjectFileRepository;
 use CodeProject\Services\ProjectFileService;
+use Illuminate\Contracts\Filesystem\Factory;
 use Illuminate\Http\Request;
 
 class ProjectFileController extends Controller
@@ -18,11 +19,18 @@ class ProjectFileController extends Controller
      */
     private $service;
 
+    /**
+     * @var \Illuminate\Contracts\Filesystem\Factory
+     */
+    private $storage;
 
-    public function __construct(ProjectFileRepository $repository, ProjectFileService $service)
+
+    public function __construct(ProjectFileRepository $repository, ProjectFileService $service,
+Factory $storage)
     {
         $this->repository = $repository;
         $this->service = $service;
+        $this->storage = $storage;
     }
 
     /**
@@ -57,19 +65,18 @@ class ProjectFileController extends Controller
     }
 
 
-    public function showFile($id)
+    public function showFile($id, $idFile)
     {
-        if($this->service->checkProjectPermissions($id) == false){
-            return ['error' => 'Access Forbidden'];
-        }
-        $filePath = $this->service->getFilePath($id);
+        $model = $this->repository->skipPresenter()->find($idFile);
+        $filePath = $this->service->getFilePath($idFile);
         $fileContent = file_get_contents($filePath);
         $file64 = base64_encode($fileContent);
 
         return [
             'file' => $file64,
             'size' => filesize($filePath),
-            'name' => $this->service->getFileName($id)
+            'name' => $this->service->getFileName($idFile),
+            'mime_type' => $this->storage->mimeType($model->getFileName())
         ];
     }
 

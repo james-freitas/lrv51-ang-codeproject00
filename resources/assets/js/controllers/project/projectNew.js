@@ -1,10 +1,10 @@
 angular.module('app.controllers')
     .controller('ProjectNewController',
-    ['$scope', '$location', '$cookies', 'Project', 'Client', 'appConfig',
-        function($scope, $location, $cookies, Project, Client, appConfig){
+    ['$scope', '$location', '$cookies', '$q', 'Project', 'Client', 'appConfig',
+        function($scope, $location, $cookies, $q ,Project, Client, appConfig){
             $scope.project = new Project();
             $scope.status = appConfig.project.status;
-
+            $scope.project.client_id = 1;
             $scope.due_date = {
                 status:{
                     opened: false
@@ -32,10 +32,17 @@ angular.module('app.controllers')
             };
 
             $scope.getClients = function (name) {
-                return Client.query({
+                var deferred = $q.defer();
+                Client.query({
                     search: name,
                     searchFields: 'name:like'
-                }).$promise;  //grante que retorna os dados
+                }, function(data){
+                    var result = $filter('limitTo')(data.data,10);
+                    deferred.resolve(data.data);
+                }, function(error){
+                    deferred.reject(error);
+                });
+                return deferred.promise;
             };
 
             $scope.selectClient = function(item){

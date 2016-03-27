@@ -16,8 +16,15 @@
                                 <td>{{o.title}}</td>
                                 <td>{{o.note | limitTo: 25}}...</td>
                                 <td>
-                                    <a ng-href="#/project/{{o.project_id}}/notes/{{o.id}}/edit">Editar</a> |
-                                    <a ng-href="#/project/{{o.project_id}}/notes/{{o.id}}/remove">Excluir</a>
+                                    <a ng-href="#/project/{{o.project_id}}/notes/{{o.id}}/edit">
+                                        Editar
+                                    </a> |
+                                    <a ng-href="#/project/{{o.project_id}}/notes/{{o.id}}/remove">
+                                        Excluir
+                                    </a>
+                                    <a href="javascript:void(0)" ng-click="print(o)">
+                                        Impressão
+                                    </a>
                                 </td>
                             </tr>
                         </tbody>
