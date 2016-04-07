@@ -78,7 +78,6 @@ class ProjectService {
     public function checkProjectMember($projectId)
     {
         $userId = \Authorizer::getResourceOwnerId();
-
         return $this->repository->hasMember($projectId, $userId);
     }
 
